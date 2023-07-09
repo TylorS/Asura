@@ -1,5 +1,5 @@
-mod tokenizer;
-use tokenizer::*;
+mod lexing;
+use lexing::*;
 
 pub fn tokenize(input: &str) -> Vec<Token> {
     let mut tokenizer = Tokenizer::new(input);
