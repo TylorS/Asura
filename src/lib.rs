@@ -21,7 +21,10 @@ mod tests {
         let input = "     ";
         let result = tokenize(input);
 
-        let exepected = vec![Token::WhiteSpace(input.to_string(), Position { start: 0, end: 5 })];
+        let exepected = vec![Token::WhiteSpace(
+            input.to_string(),
+            Position { start: 0, end: 5 },
+        )];
 
         assert_eq!(result.len(), 1);
         assert_eq!(result, exepected);
