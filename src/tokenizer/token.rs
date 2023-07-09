@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     // Literals
     BooleanLiteral(bool, Position),
@@ -81,6 +82,7 @@ pub enum Token {
     Eof(Position),
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Position {
     pub start: usize,
     pub end: usize,

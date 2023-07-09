@@ -1,7 +1,8 @@
 mod tokenizer;
+use tokenizer::*;
 
-pub fn tokenize(input: &str) -> Vec<tokenizer::token::Token> {
-    let mut tokenizer = tokenizer::tokenizer::Tokenizer::new(input);
+pub fn tokenize(input: &str) -> Vec<Token> {
+    let mut tokenizer = Tokenizer::new(input);
     let mut tokens = Vec::new();
 
     while let Some(token) = tokenizer.next_token() {
@@ -11,17 +12,18 @@ pub fn tokenize(input: &str) -> Vec<tokenizer::token::Token> {
     tokens
 }
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn it_tokenizes_whitespace() {
+        let input = "     ";
+        let result = tokenize(input);
+
+        let exepected = vec![Token::WhiteSpace(input.to_string(), Position { start: 0, end: 5 })];
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(result, exepected);
     }
 }
