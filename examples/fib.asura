@@ -1,0 +1,15 @@
+import * as Console from 'std:Console'
+
+fun fib(n: Int): Int {
+  match n {
+    n < 2 => n,
+    _ => fib(n - 2) + fib(n - 1),
+  }
+}
+
+fun main(n: Int): Effect<Console, Unit> {
+  _ <- print(`Calculating fib(${n})...`)
+  _ <- print(`Calculated fib(${n}): ${fib(n)}.`)
+}
+
+main(10) with Console.Platform
