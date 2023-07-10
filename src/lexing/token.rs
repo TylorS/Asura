@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum TokenKind {
     // Literals
     BooleanLiteral,
@@ -107,8 +107,8 @@ impl<'a> Token<'a> {
         }
     }
 
-    pub fn kind(&'a self) -> TokenKind {
-        self.kind.clone()
+    pub fn kind(&self) -> TokenKind {
+        self.kind
     }
 
     pub fn value(&self) -> &'a str {
