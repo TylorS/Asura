@@ -1,4 +1,4 @@
-import * as Console from 'std:Console'
+import Console from 'std:Console'
 
 fun fib(n: Int): Int {
   match n {
@@ -8,8 +8,8 @@ fun fib(n: Int): Int {
 }
 
 fun main(n: Int): Effect<Console, Unit> {
-  _ <- print(`Calculating fib(${n})...`)
-  _ <- print(`Calculated fib(${n}): ${fib(n)}.`)
+  _ <- Console.log(`Calculating fib(${n})...`)
+  _ <- Console.log(`Calculated fib(${n}): ${fib(n)}.`)
 }
 
 main(10) with Console.Platform
