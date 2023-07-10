@@ -1,12 +1,11 @@
 mod lexing;
 use lexing::*;
 
-pub fn tokenize(input: &str) -> Vec<Token> {
+pub fn tokenize(input: &str) -> Vec<Token<'_>> {
     let mut tokenizer = Tokenizer::asura();
 
     tokenizer.init(input);
-
-    return tokenizer.collect();
+    tokenizer.collect()
 }
 
 #[cfg(test)]
@@ -27,7 +26,7 @@ mod tests {
 
     #[test]
     fn it_tokenizes_fib_example() -> Result<(), Box<dyn Error>> {
-        let fib_asura: String = read_to_string("examples/fib.asura")?.into();
+        let fib_asura: String = read_to_string("examples/fib.asura")?;
 
         let result = tokenize(&fib_asura);
 

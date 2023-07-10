@@ -790,12 +790,12 @@ impl<'a> Spec<'a> {
     }
 }
 
-fn find_regex<'a>(
-    input: &'a str,
+fn find_regex(
+    input: &str,
     position: usize,
     re: Regex,
     kind: TokenKind,
-) -> Option<Token<'a>> {
+) -> Option<Token<'_>> {
     re.find(input).map(|m| {
         let pos = Position::new(position + m.start(), position + m.end());
 

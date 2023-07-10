@@ -37,7 +37,7 @@ impl<'a> Tokenizer<'a> {
             }
         }
 
-        return None;
+        None
     }
 }
 
