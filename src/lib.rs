@@ -49,6 +49,17 @@ mod tests {
         Ok(())
     }
 
+    #[test]
+    fn it_tokenizes_queue_example() -> Result<(), Box<dyn Error>> {
+        let contents: String = read_to_string("examples/queue.asura")?;
+
+        let result = tokenize(&contents);
+
+        print_vector(result);
+
+        Ok(())
+    }
+
     fn print_vector<A>(vec: Vec<A>)
     where
         A: std::fmt::Debug,
