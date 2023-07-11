@@ -28,6 +28,10 @@ impl<'a> Tokenizer<'a> {
     }
 
     pub fn next_token(&mut self) -> Option<Token<'a>> {
+        if self.position >= self.length {
+            return None;
+        }
+
         let input = &self.input[self.position..];
 
         for spec_fn in &self.spec.spec {

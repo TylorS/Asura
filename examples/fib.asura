@@ -2,14 +2,14 @@ import Console from 'std:Console'
 
 fun fib(n: Int): Int {
   match n {
-    n < 2 => n,
-    _ => fib(n - 2) + fib(n - 1),
+    n < 2 -> n,
+    _ -> fib(n - 2) + fib(n - 1),
   }
 }
 
 fun main(n: Int): Effect<Console, Unit> {
-  _ <- Console.log(`Calculating fib(${n})...`)
-  _ <- Console.log(`Calculated fib(${n}): ${fib(n)}.`)
+  Console.log(`Calculating fib(${n})...`)
+  Console.log(`Calculated fib(${n}): ${fib(n)}.`)
 }
 
 main(10) with Console.Platform

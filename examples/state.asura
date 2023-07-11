@@ -1,0 +1,38 @@
+effect State<A> {
+  get() -> A
+  modify<B>(A -> (B, A)) -> B
+}
+
+impl<A> for State<A> {
+  fun getAndUpdate(f: A -> A) -> A {
+    return State.modify((a) -> (a, f(a)))
+  }
+
+  handler local(initial: A) {
+    current := initial
+
+    return {
+      get() -> current,
+
+      modify(f) {
+        (b, a) = f(current)
+      
+        current = a
+
+        return b 
+      }
+    }
+  }
+}
+
+main = {
+  a = State.getAndUpdate((a) -> a * 3)
+  b = State.get()
+
+  return (a, b)
+}
+
+(a, b) = main with State.local(10)
+
+assert_equal(a, 10)
+assert_equal(b, 30)

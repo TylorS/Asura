@@ -24,7 +24,6 @@ impl<'a> Spec<'a> {
             // Keywords
             Spec::alias,
             Spec::brand,
-            Spec::case,
             Spec::effect,
             Spec::export,
             Spec::else_,
@@ -32,10 +31,12 @@ impl<'a> Spec<'a> {
             Spec::for_,
             Spec::from,
             Spec::function,
+            Spec::handler,
             Spec::if_,
             Spec::import,
             Spec::macro_,
             Spec::match_,
+            Spec::of,
             Spec::return_,
             Spec::struct_,
             Spec::type_,
@@ -47,6 +48,7 @@ impl<'a> Spec<'a> {
             Spec::dot_dot,
             Spec::dot,
             Spec::at,
+            Spec::colon_equal,
             Spec::colon,
             Spec::comma,
             Spec::left_brace,
@@ -59,6 +61,7 @@ impl<'a> Spec<'a> {
             Spec::underscore,
             Spec::pipe,
             Spec::left_arrow,
+            Spec::right_arrow,
             Spec::fat_arrow,
             // Symbols + operators
             Spec::and_and,
@@ -182,15 +185,6 @@ impl<'a> Spec<'a> {
         )
     }
 
-    fn case(input: &'a str, position: usize) -> Option<Token<'a>> {
-        find_regex(
-            input,
-            position,
-            Regex::new(r"^(case)").unwrap(),
-            TokenKind::Case,
-        )
-    }
-
     fn effect(input: &'a str, position: usize) -> Option<Token<'a>> {
         find_regex(
             input,
@@ -254,6 +248,15 @@ impl<'a> Spec<'a> {
         )
     }
 
+    fn handler(input: &'a str, position: usize) -> Option<Token<'a>> {
+        find_regex(
+            input,
+            position,
+            Regex::new(r"^(handler)").unwrap(),
+            TokenKind::Handler,
+        )
+    }
+
     fn if_(input: &'a str, position: usize) -> Option<Token<'a>> {
         find_regex(
             input,
@@ -287,6 +290,15 @@ impl<'a> Spec<'a> {
             position,
             Regex::new(r"^(match)").unwrap(),
             TokenKind::Match,
+        )
+    }
+
+    fn of(input: &'a str, position: usize) -> Option<Token<'a>> {
+        find_regex(
+            input,
+            position,
+            Regex::new(r"^(of)").unwrap(),
+            TokenKind::Of,
         )
     }
 
@@ -626,6 +638,15 @@ impl<'a> Spec<'a> {
         )
     }
 
+    fn colon_equal(input: &'a str, position: usize) -> Option<Token<'a>> {
+        find_regex(
+            input,
+            position,
+            Regex::new(r"^(:=)").unwrap(),
+            TokenKind::ColonEqual,
+        )
+    }
+
     fn comma(input: &'a str, position: usize) -> Option<Token<'a>> {
         find_regex(
             input,
@@ -713,6 +734,15 @@ impl<'a> Spec<'a> {
             position,
             Regex::new(r"^(\|>)").unwrap(),
             TokenKind::Pipe,
+        )
+    }
+
+    fn right_arrow(input: &'a str, position: usize) -> Option<Token<'a>> {
+        find_regex(
+            input,
+            position,
+            Regex::new(r"^(\->)").unwrap(),
+            TokenKind::RightArrow,
         )
     }
 

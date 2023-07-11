@@ -14,7 +14,6 @@ pub enum TokenKind {
     // Keywords
     Alias,
     Brand,
-    Case,
     Effect,
     Export,
     Else,
@@ -22,16 +21,19 @@ pub enum TokenKind {
     For,
     From,
     Function,
+    Handler,
     If,
     Import,
     Macro,
     Match,
+    Of,
     Return,
     Struct,
     Type,
     Typeclass,
     While,
     With,
+    Yield,
 
     // Symbols + Operators
     And,
@@ -67,6 +69,7 @@ pub enum TokenKind {
     // Delimiters
     At,
     Colon,
+    ColonEqual,
     Comma,
     Dot,
     DotDot,
@@ -77,6 +80,7 @@ pub enum TokenKind {
     LeftBracket,
     LeftParen,
     Pipe,
+    RightArrow,
     RightBrace,
     RightBracket,
     RightParen,
@@ -91,7 +95,7 @@ pub enum TokenKind {
     DocComment,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Copy)]
 pub struct Token<'a> {
     kind: TokenKind,
     value: &'a str,
@@ -155,10 +159,6 @@ impl<'a> Token<'a> {
         Token::new(TokenKind::Brand, value, position)
     }
 
-    pub fn case(value: &'a str, position: Position) -> Token<'a> {
-        Token::new(TokenKind::Case, value, position)
-    }
-
     pub fn effect(value: &'a str, position: Position) -> Token<'a> {
         Token::new(TokenKind::Effect, value, position)
     }
@@ -185,6 +185,10 @@ impl<'a> Token<'a> {
 
     pub fn function(value: &'a str, position: Position) -> Token<'a> {
         Token::new(TokenKind::Function, value, position)
+    }
+
+    pub fn handler(value: &'a str, position: Position) -> Token<'a> {
+        Token::new(TokenKind::Handler, value, position)
     }
 
     pub fn if_(value: &'a str, position: Position) -> Token<'a> {
@@ -355,6 +359,10 @@ impl<'a> Token<'a> {
         Token::new(TokenKind::Colon, value, position)
     }
 
+    pub fn colon_equal(value: &'a str, position: Position) -> Token<'a> {
+        Token::new(TokenKind::ColonEqual, value, position)
+    }
+
     pub fn comma(value: &'a str, position: Position) -> Token<'a> {
         Token::new(TokenKind::Comma, value, position)
     }
@@ -393,6 +401,10 @@ impl<'a> Token<'a> {
 
     pub fn pipe(value: &'a str, position: Position) -> Token<'a> {
         Token::new(TokenKind::Pipe, value, position)
+    }
+
+    pub fn right_arrow(value: &'a str, position: Position) -> Token<'a> {
+        Token::new(TokenKind::RightArrow, value, position)
     }
 
     pub fn right_brace(value: &'a str, position: Position) -> Token<'a> {

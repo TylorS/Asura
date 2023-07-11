@@ -1,0 +1,86 @@
+import Console from 'std:Console'
+
+effect Queue<A> {
+  enqueue(A): Boolean
+  dequeue(): Option<A>
+  
+  is_shutdown(): Boolean
+  shutdown(): Boolean
+}
+
+impl<A> for Queue<A> {
+  fun enqueueAll(list: [A]) {
+    for (a of list) {
+      Queue.enqueue(a)
+    }
+  }
+
+  handler unbounded() {
+    values := []
+    waiters := []
+    is_shutdown := false
+
+    return {
+      enqueue(a) {
+        if (is_shutdown) resume(false)
+
+        match waiters {
+          [] -> values ++ [a],
+          [head, ...tail] -> {
+            waiters = tail 
+            head(a)
+          },
+        }
+
+        resume(true)
+      },
+  
+      dequeue() {
+        if (is_shutdown) resume(None)
+
+        match values {
+          [] -> waiters ++ [resume],
+          [head, ...tail] -> {
+            values = tail
+
+            resume(Some(head))
+          }
+        }
+      },
+
+      is_shutdown() {
+        resume(is_shutdown)
+      },
+
+      shutdown() {
+        if (is_shutdown) resume(false)
+
+        values = []
+        waiters = []
+        
+        resume(is_shutdown = true)
+      }
+    }
+  }
+}
+
+alias IntQueue = Queue<Int>
+
+worker = {
+  while(Some(value) = IntQueue.dequeue()) {
+    Console.log(`Received ${value}`)
+  }
+}
+
+main = {
+  fiber = worker.fork()
+
+  Queue.enqueue(1)
+  Queue.enqueue(2)
+  Queue.enqueue(3)
+  Queue.shutdown()
+
+  fiber.join()
+}
+
+main with Queue.unbounded() ++ Console.Platform
