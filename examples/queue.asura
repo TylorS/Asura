@@ -9,7 +9,7 @@ effect Queue<A> {
 }
 
 impl<A> for Queue<A> {
-  fun enqueueAll(list: [A]) {
+  fun enqueue_all(list: [A]) {
     for (a of list) {
       Queue.enqueue(a)
     }
@@ -55,6 +55,11 @@ impl<A> for Queue<A> {
       shutdown() {
         if (is_shutdown) resume(false)
 
+        // Let all of the waiters shutdown
+        for waiter of waiters {
+          waiter(None)
+        }
+
         values = []
         waiters = []
         
@@ -75,9 +80,7 @@ worker = {
 main = {
   fiber = worker.fork()
 
-  Queue.enqueue(1)
-  Queue.enqueue(2)
-  Queue.enqueue(3)
+  Queue.enqueue_all([1, 2, 3])
   Queue.shutdown()
 
   fiber.join()

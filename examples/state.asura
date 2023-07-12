@@ -4,7 +4,7 @@ effect State<A> {
 }
 
 impl<A> for State<A> {
-  fun getAndUpdate(f: A -> A) -> A {
+  fun get_and_update(f: A -> A) -> A {
     return State.modify((a) -> (a, f(a)))
   }
 
@@ -26,7 +26,7 @@ impl<A> for State<A> {
 }
 
 main = {
-  a = State.getAndUpdate((a) -> a * 3)
+  a = State.get_and_update((a) -> a * 3)
   b = State.get()
 
   return (a, b)
