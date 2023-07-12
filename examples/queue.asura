@@ -22,7 +22,7 @@ impl<A> for Queue<A> {
 
     return {
       enqueue(a) {
-        if (is_shutdown) resume(false)
+        if (is_shutdown) return resume(false)
 
         match waiters {
           [] -> values ++ [a],
@@ -36,7 +36,7 @@ impl<A> for Queue<A> {
       },
   
       dequeue() {
-        if (is_shutdown) resume(None)
+        if (is_shutdown) return resume(None)
 
         match values {
           [] -> waiters ++ [resume],
@@ -53,7 +53,7 @@ impl<A> for Queue<A> {
       },
 
       shutdown() {
-        if (is_shutdown) resume(false)
+        if (is_shutdown) return resume(false)
 
         // Let all of the waiters shutdown
         for waiter of waiters {
