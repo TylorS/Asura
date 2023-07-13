@@ -1,0 +1,67 @@
+type Either<E, A> =
+  | Left(E)
+  | Right(A)
+
+type CalcError = 
+  | CannotDivideByZero
+
+effect Fail<E>(E) -> Never
+
+impl<E> for Fail<E> {
+  handler try(error: E) {
+    Either.Left(error)
+  } {
+    return(a) { Either.Right(a) }
+  }
+
+  fun catch<A>(f: (E) -> A) {
+    handler(error: E) {
+      f(error)
+    } 
+  }
+}
+
+fun safe_divide(a: Int, b: Int): Effect<Fail<CalcError.CannotDivideByZero>, Int>  {
+  match (b) {
+    0 -> Fail(CalcError.CannotDivideByZero),
+    _ -> a / _
+  }
+}
+
+type Op =
+  | Add(Int, Int)
+  | Subtract(Int, Int)
+  | Multiply(Int, Int)
+  | Divide(Int, Int)
+
+// Effects can be the description of functions
+effect Calc(Op) -> Int
+
+impl for Calc {
+  // Shorthand for a default implementation of an Effect
+  handler(op) {
+    match op {
+      Add(a, b) -> resume(a + b),
+      Subtract(a, b) -> resume(a - b),
+      Multiply(a, b) -> resume(a * b),
+      Divide(a, b) -> resume(safe_divide(a, b)),
+    }
+  }
+}
+
+
+fun main() {
+  a = Calc(Op.Add(1, 2))
+  b = Calc(Op.Multiply(a, 3))
+  c = Calc(Op.Subtract(b, 1))
+
+  Calc(Op.Divide(c, 2))
+}
+
+try_result = main() with Calc ++ Fail.try()
+
+assert_equal(try_result, Either.Right(4))
+
+catch_result = main() with Calc ++ Fail.catch(() -> 0)
+
+assert_equal(catch_result, 4)

@@ -1,5 +1,6 @@
 // TODO: Refinment types?
 // TODO: Mapped types?
+// TODO: Constraints?
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Type<'a> {

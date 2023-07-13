@@ -53,7 +53,7 @@ impl<A> for Queue<A> {
       },
 
       shutdown() {
-        if (is_shutdown) return resume(false)
+        if is_shutdown { return resume(false) }
 
         // Let all of the waiters shutdown
         for waiter of waiters {
@@ -71,19 +71,27 @@ impl<A> for Queue<A> {
 
 alias IntQueue = Queue<Int>
 
-worker = {
+fun worker() {
   while(Some(value) = IntQueue.dequeue()) {
     Console.log(`Received ${value}`)
   }
 }
 
-main = {
+fun main() {
+  // All functions can be called with the fork() syntax
+  // to construct a fiber 
   fiber = worker.fork()
 
   Queue.enqueue_all([1, 2, 3])
   Queue.shutdown()
 
+  // Fiber's can be re-joined into its parent
   fiber.join()
 }
 
-main with Queue.unbounded() ++ Console.Platform
+// Construct handlers using ++ to "merge" 
+// 2 handlers into 1 which can be passed around.
+handlers = Queue.unbounded() ++ Console.Platform
+
+// Handlers are provided to functions using "with"
+main() with handlers

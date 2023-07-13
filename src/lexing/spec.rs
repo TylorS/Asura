@@ -34,6 +34,7 @@ lazy_static! {
     pub static ref HANDLER_REGEX: Regex = Regex::new(r"^(handler)").unwrap();
     pub static ref IF_REGEX: Regex = Regex::new(r"^(if)").unwrap();
     pub static ref IMPORT_REGEX: Regex = Regex::new(r"^(import)").unwrap();
+    pub static ref IMPLEMENTATION_REGEX: Regex = Regex::new(r"^(impl)").unwrap();
     pub static ref MACRO_REGEX: Regex = Regex::new(r"^(macro)").unwrap();
     pub static ref MATCH_REGEX: Regex = Regex::new(r"^(match)").unwrap();
     pub static ref OF_REGEX: Regex = Regex::new(r"^(of)").unwrap();
@@ -102,7 +103,7 @@ lazy_static! {
     pub static ref WHITESPACE_REGEX: Regex = Regex::new(r"^([ \t\r\n])+").unwrap();
 
     // Comments
-    pub static ref COMMENT_REGEX: Regex = Regex::new(r"^//.*").unwrap();
+    pub static ref COMMENT_REGEX: Regex = Regex::new(r"^//.*[\r\n]").unwrap();
     pub static ref DOC_COMMENT_REGEX: Regex = Regex::new(r"^(/\*\*).*\*/").unwrap();
 }
 
@@ -113,6 +114,9 @@ impl<'a> Spec<'a> {
 
     pub fn asura() -> Spec<'a> {
         Spec::new(vec![
+            // Comments
+            Spec::comment,
+            Spec::doc_comment,
             // Literals
             Spec::boolean_literal,
             Spec::number_literal,
@@ -132,6 +136,7 @@ impl<'a> Spec<'a> {
             Spec::handler,
             Spec::if_,
             Spec::import,
+            Spec::implementation,
             Spec::macro_,
             Spec::match_,
             Spec::of,
@@ -141,7 +146,7 @@ impl<'a> Spec<'a> {
             Spec::typeclass,
             Spec::while_,
             Spec::with,
-            // Delimiters
+            // Symbols + operators
             Spec::dot_dot_dot,
             Spec::dot_dot,
             Spec::dot,
@@ -161,7 +166,6 @@ impl<'a> Spec<'a> {
             Spec::left_arrow,
             Spec::right_arrow,
             Spec::fat_arrow,
-            // Symbols + operators
             Spec::and_and,
             Spec::and,
             Spec::back_slash,
@@ -196,9 +200,6 @@ impl<'a> Spec<'a> {
             Spec::identifier,
             // Whitespace
             Spec::whitespace,
-            // Comments
-            Spec::comment,
-            Spec::doc_comment,
         ])
     }
 
@@ -306,6 +307,15 @@ impl<'a> Spec<'a> {
 
     fn import(input: &'a str, position: usize) -> Option<Token<'a>> {
         find_regex(input, position, &IMPORT_REGEX, TokenKind::Import)
+    }
+
+    fn implementation(input: &'a str, position: usize) -> Option<Token<'a>> {
+        find_regex(
+            input,
+            position,
+            &IMPLEMENTATION_REGEX,
+            TokenKind::Implementation,
+        )
     }
 
     fn macro_(input: &'a str, position: usize) -> Option<Token<'a>> {

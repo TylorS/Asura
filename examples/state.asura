@@ -1,3 +1,6 @@
+// Effects can utilize generics, and can utilize
+// a struct-like definition of multiple related
+// functions that should be provided together.
 effect State<A> {
   get() -> A
   modify<B>(A -> (B, A)) -> B
@@ -5,34 +8,36 @@ effect State<A> {
 
 impl<A> for State<A> {
   fun get_and_update(f: A -> A) -> A {
-    return State.modify((a) -> (a, f(a)))
+    // Implicit returns
+    State.modify((a) -> (a, f(a)))
   }
 
   handler local(initial: A) {
+    // Mutable variables uses :=
     current := initial
 
     return {
-      get() -> current,
-
+      get() { current },
       modify(f) {
         (b, a) = f(current)
-      
         current = a
-
-        return b 
+        b
       }
     }
   }
 }
 
-main = {
+fun main() {
+  // Variables are always constant
   a = State.get_and_update((a) -> a * 3)
   b = State.get()
 
+  // Tuples
   return (a, b)
 }
 
-(a, b) = main with State.local(10)
+// Destructuring
+(a, b) = main() with State.local(10)
 
 assert_equal(a, 10)
 assert_equal(b, 30)

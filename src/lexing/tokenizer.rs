@@ -27,6 +27,10 @@ impl<'a> Tokenizer<'a> {
         self.position = 0;
     }
 
+    // TODO: Eventually we want to get rid of the use of Spec and just use
+    //       the Tokenizer to tokenize the input. This will require a bit of
+    //       refactoring, but it will be worth it in terms of performance which
+    //       is still quite good already.
     pub fn next_token(&mut self) -> Option<Token<'a>> {
         if self.position >= self.length {
             return None;

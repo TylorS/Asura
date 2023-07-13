@@ -24,6 +24,7 @@ pub enum TokenKind {
     Handler,
     If,
     Import,
+    Implementation,
     Macro,
     Match,
     Of,
@@ -437,6 +438,10 @@ impl<'a> Token<'a> {
 
     pub fn doc_comment(value: &'a str, position: Position) -> Token<'a> {
         Token::new(TokenKind::DocComment, value, position)
+    }
+
+    pub fn implementation(value: &'a str, position: Position) -> Token<'a> {
+        Token::new(TokenKind::Implementation, value, position)
     }
 }
 
